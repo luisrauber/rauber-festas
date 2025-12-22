@@ -49,8 +49,11 @@ O servidor iniciará em http://localhost:3000.
 
 ### Passo 4: Acessar
 Site: Acesse `http://localhost:3000` no seu navegador
+
 Admin: Acesse `http://localhost:3000/admin.html`
+
 Login: admin@rauber.com
+
 Senha: rauber123
 
 ---
