@@ -17,6 +17,11 @@ Sistema web desenvolvido para gerenciamento de agendamentos e vitrine virtual do
 - Galeria de fotos reais dos eventos.
 - Links diretos para contato (WhatsApp).
 
+## 📚 Documentação
+O projeto foi desenvolvido seguindo a metodologia em espiral. Você pode conferir os diagramas UML, casos de uso e requisitos detalhados no documento oficial:
+
+📄 **[Ver Documentação Completa (PDF)](docs/Rauber%20Festas%20e%20Eventos.pdf)**
+
 ### 🛡️ Administrativo (Gestão)
 - **Login Seguro** (Simulado para MVP).
 - **Gestão de Agenda:** Criar, Editar e Finalizar eventos.
