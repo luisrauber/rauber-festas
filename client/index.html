@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rauber Festas e Eventos</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Estilo extra para os cards de preço */
+        .price-card { transition: transform 0.3s; border: none; border-radius: 15px; overflow: hidden; }
+        .price-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        
+        /* Cores personalizadas para os planos */
+        .price-header.semana { background-color: var(--dark-bg); color: white; }
+        .price-header.fim-semana { background-color: var(--primary-gold); color: white; }
+        .price-header.corporativo { background-color: #555; color: white; }
+        .price-amount { font-size: 2.5rem; font-weight: 700; color: var(--primary-gold); }
+        
+        /* Estilo do Calendário */
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            min-height: 500px; /* Garante altura mínima */
+        }
+        .fc-daygrid-day.fc-day-past { background-color: #f0f0f0; }
+        .fc-bg-event { opacity: 0.6; }
+        .fc-event-title { font-weight: bold; color: white; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Rauber <span style="color: #333;">Festas e Eventos</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#home">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sobre">O Espaço</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#pacote">Pacote</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#planos">Planos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#agenda">Agenda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#galeria">Galeria</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <div class="container" data-aos="fade-up">
+            <h1 class="hero-title">Celebre seus Melhores Momentos</h1>
+            <p class="lead mb-4">Espaço aconchegante, climatizado e completo para o seu evento.</p>
+            <a href="#planos" class="btn btn-gold btn-lg">Conheça Nossos Planos</a>
+        </div>
+    </section>
+
+    <section id="sobre" class="section-padding bg-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <img src="assets/foto3.jpg" alt="Interior do Salão" class="img-fluid rounded shadow" onerror="this.src='https://via.placeholder.com/600x400?text=Foto+do+Espaço'">
+                </div>
+                <div class="col-lg-6 mt-4 mt-lg-0 ps-lg-5" data-aos="fade-left">
+                    <h3 class="mb-3">O Lugar Perfeito para sua Festa</h3>
+                    <p>Temos um espaço aconchegante, todo climatizado e com ambiente bem iluminado. Ideal para receber de <strong>80 a 120 pessoas</strong>.</p>
+                    <ul class="list-unstyled mt-4">
+                        <li class="mb-2"><i class="fas fa-check-circle text-warning me-2"></i> Ambiente Climatizado</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-warning me-2"></i> Iluminação Profissional</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-warning me-2"></i> Localização Acessível</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pacote" class="section-padding" style="background-color: #f9f9f9;">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>O Que Está Incluso?</h2>
+                <div class="line"></div>
+                <p class="mt-3 text-muted">Infraestrutura completa para que você só traga a alegria.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-3 col-6" data-aos="zoom-in"><div class="feature-box"><i class="fas fa-chair feature-icon"></i><h5>120 Cadeiras</h5></div></div>
+                <div class="col-md-3 col-6" data-aos="zoom-in"><div class="feature-box"><i class="fas fa-table feature-icon"></i><h5>30 Mesas</h5></div></div>
+                <div class="col-md-3 col-6" data-aos="zoom-in"><div class="feature-box"><i class="fas fa-utensils feature-icon"></i><h5>Copa e Cozinha</h5></div></div>
+                <div class="col-md-3 col-6" data-aos="zoom-in"><div class="feature-box"><i class="fas fa-snowflake feature-icon"></i><h5>Geladeira</h5></div></div>
+                <div class="col-md-3 col-6" data-aos="zoom-in"><div class="feature-box"><i class="fas fa-tv feature-icon"></i><h5>Data Show / Telão</h5></div></div>
+                <div class="col-md-3 col-6" data-aos="zoom-in"><div class="feature-box"><i class="fas fa-music feature-icon"></i><h5>Mesa do DJ</h5></div></div>
+                <div class="col-md-3 col-6" data-aos="zoom-in"><div class="feature-box"><i class="fas fa-cocktail feature-icon"></i><h5>Mesa do Drink</h5></div></div>
+                <div class="col-md-3 col-6" data-aos="zoom-in"><div class="feature-box"><i class="fas fa-broom feature-icon"></i><h5>Taxa de Limpeza</h5></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="planos" class="section-padding bg-white">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Nossos Planos</h2>
+                <div class="line"></div>
+                <p class="mt-3 text-muted">Escolha a melhor opção para o seu evento.</p>
+            </div>
+            <div class="row justify-content-center g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card price-card h-100 text-center shadow-sm">
+                        <div class="price-header semana p-4">
+                            <h4>Segunda a Quinta</h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="price-amount">R$ 1.500</div>
+                            <p class="text-muted">Ideal para confraternizações e festas menores.</p>
+                            <ul class="list-unstyled my-4">
+                                <li><i class="fas fa-check text-success me-2"></i> Pacote Completo</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Climatização</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Limpeza inclusa</li>
+                            </ul>
+                            <a href="https://wa.me/5592991225774?text=Ola,+tenho+interesse+no+plano+de+Segunda+a+Quinta" target="_blank" class="btn btn-outline-gold w-100">Reservar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card price-card h-100 text-center shadow border-warning" style="transform: scale(1.05); z-index: 2;">
+                        <div class="price-header fim-semana p-4">
+                            <h4 class="fw-bold">Fim de Semana</h4>
+                            <span class="badge bg-light text-dark mt-2">Mais Popular</span>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="price-amount text-dark">R$ 2.000</div>
+                            <p class="text-muted">Sexta, Sábado, Domingo e Feriados.</p>
+                            <ul class="list-unstyled my-4">
+                                <li><i class="fas fa-check text-success me-2"></i> Pacote Completo</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Horário Flexível</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Climatização</li>
+                            </ul>
+                            <a href="https://wa.me/5592991225774?text=Ola,+tenho+interesse+no+plano+de+Fim+de+Semana" target="_blank" class="btn btn-gold w-100">Reservar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card price-card h-100 text-center shadow-sm">
+                        <div class="price-header corporativo p-4">
+                            <h4>Corporativo</h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="price-amount" style="font-size: 2rem;">Sob Consulta</div>
+                            <p class="text-muted">Para empresas, reuniões e treinamentos.</p>
+                            <ul class="list-unstyled my-4">
+                                <li><i class="fas fa-check text-success me-2"></i> Pacote Completo</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Layout adaptável</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Climatização</li>
+                            </ul>
+                            <a href="https://wa.me/5592991225774?text=Ola,+tenho+interesse+no+plano+Corporativo" target="_blank" class="btn btn-outline-gold w-100">Fazer Orçamento</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="agenda" class="section-padding" style="background-color: #f9f9f9;">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Verificar Disponibilidade</h2>
+                <div class="line"></div>
+                <p class="mt-3 text-muted">Confira abaixo as datas já reservadas.</p>
+            </div>
+            <div id="calendar"></div>
+        </div>
+    </section>
+
+    <section id="galeria" class="section-padding bg-white">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Nossa Galeria</h2>
+                <div class="line"></div>
+                <p class="mt-3 text-muted">Confira alguns eventos realizados no nosso espaço.</p>
+            </div>
+
+            <div class="row mb-4" data-aos="fade-up">
+                <div class="col-12 text-center">
+                    <button class="btn btn-outline-gold active filter-btn" data-filter="all">Todos</button>
+                    <button class="btn btn-outline-gold filter-btn" data-filter="Casamento">Casamentos</button>
+                    <button class="btn btn-outline-gold filter-btn" data-filter="Aniversario">Aniversários</button>
+                    <button class="btn btn-outline-gold filter-btn" data-filter="Infantil">Infantil</button>
+                </div>
+            </div>
+
+            <div class="row g-3" id="galeria-container">
+                </div>
+        </div> </section> <section id="localizacao" class="section-padding" style="background-color: #f9f9f9;">
+        <div class="container">
+            <div class="section-title" data-aos="fade-up">
+                <h2>Onde Estamos</h2>
+                <div class="line"></div>
+                <p class="mt-3 text-muted">Venha nos fazer uma visita!</p>
+            </div>
+            <div class="row justify-content-center" data-aos="fade-up">
+                <div class="col-12">
+                    <div class="map-responsive rounded shadow">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.034336040669!2d-58.44470392526322!3d-3.138096240239194!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x926c1074e2df09ad%3A0x644208e920d32f79!2sR.%20Dr.%20Luzardo%20Ferreira%20de%20Melo%2C%202045%20-%20Centro%2C%20Itacoatiara%20-%20AM%2C%2069100-000!5e0!3m2!1spt-BR!2sbr!4v1716300000000!5m2!1spt-BR!2sbr" 
+                                width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contato" class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h4>Rauber Festas e Eventos</h4>
+                    <p>O melhor espaço para celebrar a vida com quem você ama.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h4>Contato</h4>
+                    <p><i class="fas fa-phone me-2"></i> (92) 99122-5774</p>
+                    <p><i class="fas fa-envelope me-2"></i> rauberto.rer@gmail.com</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> Rua Dr. Luzardo Ferreira de Melo, Centro Nº 2045</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h4>Siga-nos</h4>
+                    <a href="https://www.instagram.com/rauberfestaseeventos" target="_blank" class="text-white me-3 fs-4"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between align-items-center small">
+                <span>© 2025 Luis Rauber.</span>
+                <a href="admin.html" class="text-white text-decoration-none border border-secondary p-2 rounded bg-secondary bg-opacity-25">
+                    <i class="fas fa-lock me-1"></i> Área Restrita
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/5592991225774" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/main.js"></script> 
+    
+    <script>
+        AOS.init();
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.querySelector('.navbar').classList.add('shadow-sm');
+            } else {
+                document.querySelector('.navbar').classList.remove('shadow-sm');
+            }
+        });
+    </script>
+</body>
+</html>

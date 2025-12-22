@@ -1,0 +1,297 @@
+/* Fonte elegante */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary-gold: #c5a059; /* Dourado elegante */
+    --dark-bg: #1a1a1a;
+    --light-bg: #f8f9fa;
+    --text-dark: #333;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .navbar-brand {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--primary-gold) !important;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: var(--text-dark) !important;
+    font-weight: 500;
+    margin-left: 15px;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--primary-gold) !important;
+}
+
+/* Hero Section (O Banner Principal) */
+.hero-section {
+    /* Use uma foto real aqui depois! */
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../assets/banner2.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.btn-gold {
+    background-color: var(--primary-gold);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 30px;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: transform 0.3s;
+}
+
+.btn-gold:hover {
+    background-color: #b08d48;
+    transform: translateY(-3px);
+    color: white;
+}
+
+/* Seções */
+.section-padding {
+    padding: 80px 0;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+    color: var(--dark-bg);
+    margin-bottom: 15px;
+}
+
+.section-title .line {
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary-gold);
+    margin: 0 auto;
+}
+
+/* Card do Pacote */
+.feature-box {
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+    height: 100%;
+    border-bottom: 3px solid transparent;
+}
+
+.feature-box:hover {
+    transform: translateY(-10px);
+    border-bottom: 3px solid var(--primary-gold);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: var(--primary-gold);
+    margin-bottom: 20px;
+}
+
+/* Preço */
+.price-box {
+    background-color: var(--dark-bg);
+    color: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.price-value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-gold);
+}
+
+/* Botão Flutuante WhatsApp */
+.whatsapp-float {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    background-color: #25d366;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: transform 0.3s;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+    color: white;
+}
+
+/* --- Galeria --- */
+.btn-outline-gold {
+    border: 2px solid var(--primary-gold);
+    color: var(--primary-gold);
+    margin: 5px;
+    border-radius: 20px;
+    padding: 8px 20px;
+    font-weight: 600;
+}
+
+.btn-outline-gold:hover, .btn-outline-gold.active {
+    background-color: var(--primary-gold);
+    color: white;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 300px; /* Altura fixa para ficar alinhado */
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+.gallery-item .overlay {
+    position: absolute;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6); /* Fundo preto transparente */
+    color: #f1f1f1;
+    width: 100%;
+    transition: .5s ease;
+    opacity: 0;
+    color: white;
+    font-size: 20px;
+    padding: 20px;
+    text-align: center;
+}
+
+.gallery-item:hover .overlay {
+    opacity: 1;
+}
+
+/* Mapa Responsivo */
+.map-responsive {
+    overflow:hidden;
+    padding-bottom:40%; /* Proporção do mapa */
+    position:relative;
+    height:0;
+}
+.map-responsive iframe {
+    left:0;
+    top:0;
+    height:100%;
+    width:100%;
+    position:absolute;
+}
+
+/* --- Personalização do FullCalendar (Rauber Festas) --- */
+
+/* 1. Cabeçalho do Calendário (Mês/Ano) */
+.fc .fc-toolbar-title {
+    font-family: 'Playfair Display', serif; /* Mantém a fonte elegante do site */
+    font-size: 1.75rem;
+    color: var(--dark-bg);
+}
+
+/* 2. Botões (Hoje, Anterior, Próximo) */
+.fc .fc-button-primary {
+    background-color: var(--primary-gold);
+    border-color: var(--primary-gold);
+    border-radius: 20px; /* Arredondado para combinar com seus botões */
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+}
+
+.fc .fc-button-primary:hover, 
+.fc .fc-button-primary:not(:disabled).fc-button-active {
+    background-color: #b08d48; /* Tom mais escuro do dourado ao passar o mouse */
+    border-color: #b08d48;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.fc .fc-button-primary:disabled {
+    background-color: #e0e0e0;
+    border-color: #e0e0e0;
+    color: #888;
+}
+
+/* 3. Destaque do "Dia Atual" (Hoje) */
+.fc .fc-day-today {
+    background-color: rgba(197, 160, 89, 0.1) !important; /* Dourado bem suave, 10% opacidade */
+}
+
+/* 4. Estilização Geral dos Eventos (Base) */
+.fc-event {
+    border: none;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer; /* Indica que é clicável (para o admin ver detalhes) */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 5. Ajuste para Mobile (Tamanho da fonte nos dias da semana) */
+@media (max-width: 768px) {
+    .fc .fc-toolbar-title {
+        font-size: 1.2rem;
+    }
+    .fc .fc-button {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
+}

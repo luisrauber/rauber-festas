@@ -1,0 +1,11 @@
+# Ignora as bibliotecas pesadas do Node
+node_modules/
+
+# Ignora arquivos de sistema (Lixo do Windows/Mac)
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Ignora as fotos de teste, mas mantém a pasta uploads criada
+client/uploads/*
+!client/uploads/.gitkeep
