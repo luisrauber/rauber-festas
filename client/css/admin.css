@@ -1,0 +1,94 @@
+/* --- ARQUIVO EXCLUSIVO DO PAINEL ADMIN --- */
+
+/* Fundo da tela de login com gradiente elegante */
+.login-bg {
+    background: linear-gradient(135deg, var(--dark-bg) 0%, #333 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    overflow: hidden;
+    border: none;
+}
+
+.login-header {
+    background-color: var(--primary-gold);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+/* Navbar do Admin (Preta e Dourada) */
+.admin-navbar {
+    background-color: var(--dark-bg) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.admin-navbar .navbar-brand {
+    color: var(--primary-gold) !important;
+    font-size: 1.5rem;
+}
+
+/* Abas de Navegação (Tabs) */
+.nav-tabs .nav-link {
+    color: var(--text-dark);
+    border: none;
+    font-weight: 600;
+    padding: 15px 25px;
+    border-radius: 10px 10px 0 0;
+    transition: all 0.3s;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: white;
+    color: var(--primary-gold);
+    border-bottom: 3px solid var(--primary-gold);
+}
+
+.nav-tabs .nav-link:hover {
+    color: var(--primary-gold);
+}
+
+/* Cards de Eventos Modernos */
+.event-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+    background: white;
+    overflow: hidden;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+/* Faixa lateral colorida no card */
+.event-status-strip {
+    width: 8px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* Cores dos Status */
+.bg-status-NAO_PAGO { background-color: #ff4757; }
+.bg-status-PARCIAL { background-color: #ffa502; }
+.bg-status-PAGO { background-color: #2ed573; }
+.bg-status-CONCLUIDO { background-color: #747d8c; }
+
+/* Botões de Ação Redondinhos */
+.btn-action {
+    border-radius: 50px;
+    font-size: 0.85rem;
+    padding: 5px 15px;
+    font-weight: 500;
+}

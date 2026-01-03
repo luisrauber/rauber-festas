@@ -5,132 +5,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Admin - Rauber Eventos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Cores dos status */
-        .status-NAO_PAGO { border-left: 5px solid #dc3545; background-color: #fff5f5; }
-        .status-PARCIAL { border-left: 5px solid #ffc107; background-color: #fffff0; }
-        .status-PAGO { border-left: 5px solid #198754; background-color: #f0fff4; }
-        .status-CONCLUIDO { border-left: 5px solid #6c757d; background-color: #e9ecef; opacity: 0.8; }
-        
-        /* Ajuste do Calendário no Modal */
-        #calendarAdmin {
-            max-height: 70vh;
-        }
-        .fc-event { cursor: pointer; }
-    </style>
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 <body class="bg-light">
 
-    <div id="tela-login" class="container vh-100 d-flex justify-content-center align-items-center">
-        <div class="card shadow p-4" style="width: 400px;">
-            <h3 class="text-center mb-4">Acesso Restrito</h3>
-            <form id="form-login">
-                <div class="mb-3">
-                    <label>Email</label>
-                    <input type="email" id="email" class="form-control" value="admin@rauber.com">
+    <div id="tela-login" class="login-bg">
+        <div class="col-md-4 col-sm-10">
+            <div class="card login-card">
+                <div class="login-header">
+                    <h3 class="mb-0"><i class="fas fa-user-shield me-2"></i> Área Restrita</h3>
+                    <p class="mb-0 small opacity-75">Rauber Festas e Eventos</p>
                 </div>
-                <div class="mb-3">
-                    <label>Senha</label>
-                    <input type="password" id="senha" class="form-control" value="rauber123">
+                <div class="card-body p-5">
+                    <form id="form-login">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted">Email de Acesso</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-envelope text-muted"></i></span>
+                                <input type="email" id="email" class="form-control border-start-0 bg-light" placeholder="admin@rauber.com" value="admin@rauber.com">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-muted">Senha</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-lock text-muted"></i></span>
+                                <input type="password" id="senha" class="form-control border-start-0 bg-light" placeholder="******" value="rauber123">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-gold w-100 py-2 shadow-sm">ENTRAR NO SISTEMA</button>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-gold w-100">Entrar</button>
-            </form>
+            </div>
         </div>
     </div>
 
     <div id="tela-painel" class="d-none">
-        <nav class="navbar navbar-dark bg-dark mb-4">
+        
+        <nav class="navbar navbar-expand-lg navbar-dark admin-navbar mb-5">
             <div class="container">
-                <span class="navbar-brand">Painel Administrativo</span>
-                <button onclick="logout()" class="btn btn-outline-light btn-sm">Sair</button>
+                <a class="navbar-brand fw-bold" href="#"><i class="fas fa-wine-glass-alt me-2"></i> Rauber <span class="text-white fw-light">Gestão</span></a>
+                <button onclick="logout()" class="btn btn-outline-light btn-sm rounded-pill px-4">
+                    <i class="fas fa-sign-out-alt me-2"></i> Sair
+                </button>
             </div>
         </nav>
 
-        <div class="container">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <div class="container pb-5">
+            
+            <ul class="nav nav-tabs border-0 mb-3" id="myTab" role="tablist">
                 <li class="nav-item">
-                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#reservas-tab">Agenda & Pagamentos</button>
+                    <button class="nav-link active shadow-sm me-2" data-bs-toggle="tab" data-bs-target="#reservas-tab">
+                        <i class="fas fa-calendar-check me-2"></i> Agenda & Reservas
+                    </button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#galeria-tab">Gerenciar Galeria</button>
+                    <button class="nav-link shadow-sm" data-bs-toggle="tab" data-bs-target="#galeria-tab">
+                        <i class="fas fa-images me-2"></i> Gestão da Galeria
+                    </button>
                 </li>
             </ul>
 
-            <div class="tab-content p-4 bg-white border border-top-0 shadow-sm">
+            <div class="tab-content bg-white p-4 rounded-3 shadow-sm" style="min-height: 500px;">
                 
                 <div class="tab-pane fade show active" id="reservas-tab">
-                    
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="mb-0">Adicionar Novo Evento</h5>
-                        <button class="btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalCalendarioAdmin">
-                            📅 Ver Calendário Visual
+                    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                        <h4 class="text-dark fw-bold mb-0">Controle de Eventos</h4>
+                        <button class="btn btn-primary text-white rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCalendarioAdmin">
+                            <i class="fas fa-calendar-alt me-2"></i> Visão Mensal
                         </button>
                     </div>
 
-                    <form id="form-reserva" class="row g-3 mb-5 border-bottom pb-4">
-                        <input type="hidden" id="reserva-id">
-                        <div class="col-md-4">
-                            <label>Nome do Cliente</label>
-                            <input type="text" id="reserva-nome" class="form-control" required>
+                    <div class="card border-0 bg-light mb-5">
+                        <div class="card-body p-4">
+                            <h6 class="text-uppercase fw-bold text-muted mb-3"><i class="fas fa-plus-circle me-2"></i> Novo Agendamento</h6>
+                            <form id="form-reserva" class="row g-3">
+                                <input type="hidden" id="reserva-id">
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold">Nome do Cliente</label>
+                                    <input type="text" id="reserva-nome" class="form-control" placeholder="Ex: Maria Silva" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-bold">Data do Evento</label>
+                                    <input type="date" id="reserva-data" class="form-control" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-bold">Status Financeiro</label>
+                                    <select id="reserva-status" class="form-select">
+                                        <option value="NAO_PAGO">❌ Não Pago</option>
+                                        <option value="PARCIAL">⏳ Parcial</option>
+                                        <option value="PAGO">✅ Totalmente Pago</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label small fw-bold">Detalhes / Observações</label>
+                                    <textarea id="reserva-detalhes" class="form-control" rows="2" placeholder="Tipo de festa, horário, valores combinados..."></textarea>
+                                </div>
+                                <div class="col-12 text-end mt-3">
+                                    <button type="button" class="btn btn-secondary btn-sm me-2 d-none" id="btn-cancelar-edicao" onclick="limparFormularioReserva()">Cancelar</button>
+                                    <button type="submit" class="btn btn-success px-4" id="btn-salvar-reserva"><i class="fas fa-save me-2"></i> Salvar Evento</button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="col-md-3">
-                            <label>Data do Evento</label>
-                            <input type="date" id="reserva-data" class="form-control" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label>Status Pagamento</label>
-                            <select id="reserva-status" class="form-select">
-                                <option value="NAO_PAGO">🔴 Não Pago</option>
-                                <option value="PARCIAL">🟡 Parcial</option>
-                                <option value="PAGO">🟢 Pago</option>
-                            </select>
-                        </div>
-                        <div class="col-md-12">
-                            <label>Informações do Evento</label>
-                            <textarea id="reserva-detalhes" class="form-control" rows="2" placeholder="Ex: Festa de 15 anos, buffet externo, DJ contratado..."></textarea>
-                        </div>
-                        <div class="col-12 d-flex gap-2">
-                            <button type="submit" class="btn btn-success" id="btn-salvar-reserva">Salvar na Agenda</button>
-                            <button type="button" class="btn btn-secondary d-none" id="btn-cancelar-edicao" onclick="limparFormularioReserva()">Cancelar Edição</button>
-                        </div>
-                    </form>
+                    </div>
 
-                    <h4 class="text-primary border-bottom pb-2 mb-3">📅 Próximos Eventos</h4>
-                    <div id="lista-reservas" class="row g-3 mb-5"></div>
+                    <h5 class="fw-bold mb-3 text-primary"><i class="fas fa-clock me-2"></i> Próximos Eventos</h5>
+                    <div id="lista-reservas" class="row g-4 mb-5"></div>
 
-                    <h4 class="text-secondary border-bottom pb-2 mb-3">📂 Histórico / Finalizados</h4>
-                    <div id="lista-historico" class="row g-3"></div>
+                    <h5 class="fw-bold mb-3 text-secondary border-top pt-4"><i class="fas fa-history me-2"></i> Histórico de Realizados</h5>
+                    <div id="lista-historico" class="row g-4"></div>
                 </div>
 
                 <div class="tab-pane fade" id="galeria-tab">
-                    <h5 class="mb-3">Adicionar Foto</h5>
-                    <form id="form-upload" class="row g-3 mb-5 border-bottom pb-4">
-                        <div class="col-md-4">
-                            <label>Título</label>
-                            <input type="text" id="foto-titulo" class="form-control" required>
+                    <div class="row">
+                        <div class="col-md-4 border-end pe-4">
+                            <h5 class="fw-bold mb-4">Upload de Foto</h5>
+                            <form id="form-upload" class="d-grid gap-3">
+                                <div>
+                                    <label class="form-label fw-bold small">Título da Foto</label>
+                                    <input type="text" id="foto-titulo" class="form-control" required>
+                                </div>
+                                <div>
+                                    <label class="form-label fw-bold small">Categoria</label>
+                                    <select id="foto-categoria" class="form-select">
+                                        <option value="Casamento">Casamento</option>
+                                        <option value="Aniversario">Aniversário</option>
+                                        <option value="Infantil">Infantil</option>
+                                        <option value="Espaco">O Espaço</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label fw-bold small">Selecione o Arquivo</label>
+                                    <input type="file" id="foto-arquivo" class="form-control" accept="image/*" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-cloud-upload-alt me-2"></i> Enviar para o Site</button>
+                            </form>
                         </div>
-                        <div class="col-md-3">
-                            <label>Categoria</label>
-                            <select id="foto-categoria" class="form-select">
-                                <option value="Casamento">Casamento</option>
-                                <option value="Aniversario">Aniversário</option>
-                                <option value="Infantil">Infantil</option>
-                                <option value="Espaco">O Espaço</option>
-                            </select>
+                        <div class="col-md-8 ps-4">
+                            <h5 class="fw-bold mb-4">Fotos Atuais na Vitrine</h5>
+                            <div id="lista-fotos-admin" class="row g-3"></div>
                         </div>
-                        <div class="col-md-5">
-                            <label>Arquivo</label>
-                            <input type="file" id="foto-arquivo" class="form-control" accept="image/*" required>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Enviar Foto</button>
-                        </div>
-                    </form>
-
-                    <h5>Fotos no Site</h5>
-                    <div id="lista-fotos-admin" class="row g-2"></div>
+                    </div>
                 </div>
 
             </div>
@@ -138,12 +155,13 @@
     </div>
 
     <div class="modal fade" id="modalCalendarioAdmin" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl"> <div class="modal-content">
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title">Visão Geral da Agenda</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title"><i class="fas fa-calendar-alt me-2"></i> Visão Geral da Agenda</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <div id="calendarAdmin"></div>
                 </div>
             </div>

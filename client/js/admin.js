@@ -93,41 +93,87 @@ async function carregarReservas() {
         const dataObj = new Date(r.data_evento);
         const dataF = new Date(dataObj.getUTCFullYear(), dataObj.getUTCMonth(), dataObj.getUTCDate()).toLocaleDateString('pt-BR');
         
-        let statusTexto = 'Não Pago';
-        let corBadge = 'bg-danger';
-        if(r.status_pagamento === 'PARCIAL') { statusTexto = 'Parcial'; corBadge = 'bg-warning text-dark'; }
-        if(r.status_pagamento === 'PAGO') { statusTexto = 'Pago Total'; corBadge = 'bg-success'; }
-        if(r.status_pagamento === 'CONCLUIDO') { statusTexto = 'Concluído'; corBadge = 'bg-secondary'; }
+        // --- CONFIGURAÇÃO DOS NOVOS ÍCONES MODERNOS ---
+        let statusConfig = { 
+            texto: 'Aguardando Pagamento', 
+            classe: 'bg-status-NAO_PAGO', 
+            badge: 'bg-danger bg-opacity-75', // Vermelho mais suave
+            icon: 'fa-file-invoice-dollar'     // Ícone de Fatura
+        };
+        
+        if(r.status_pagamento === 'PARCIAL') {
+            statusConfig = { 
+                texto: 'Sinal Pago', 
+                classe: 'bg-status-PARCIAL', 
+                badge: 'bg-warning text-dark',
+                icon: 'fa-handshake'           // Ícone de Acordo/Sinal
+            };
+        }
+        
+        if(r.status_pagamento === 'PAGO') {
+            statusConfig = { 
+                texto: 'Quitado', 
+                classe: 'bg-status-PAGO', 
+                badge: 'bg-success',
+                icon: 'fa-check-double'        // Duplo Check (Confirmado)
+            };
+        }
+        
+        if(r.status_pagamento === 'CONCLUIDO') {
+            statusConfig = { 
+                texto: 'Arquivado', 
+                classe: 'bg-status-CONCLUIDO', 
+                badge: 'bg-secondary',
+                icon: 'fa-box-open'            // Ícone de Caixa/Arquivo
+            };
+        }
 
         let botoesAcao = '';
         if (r.status_pagamento !== 'CONCLUIDO') {
             botoesAcao = `
-                <div class="mt-3 border-top pt-2 d-flex gap-2">
-                    <button onclick='editarReserva(${JSON.stringify(r)})' class="btn btn-sm btn-primary flex-grow-1">✏️ Editar</button>
-                    <button onclick="finalizarReserva(${r.id})" class="btn btn-sm btn-success flex-grow-1">✅ Finalizar</button>
-                    <button onclick="deletarReserva(${r.id})" class="btn btn-sm btn-outline-danger">🗑️</button>
+                <div class="mt-3 d-flex gap-2 border-top pt-3">
+                    <button onclick='editarReserva(${JSON.stringify(r)})' class="btn btn-action btn-outline-primary flex-grow-1">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button onclick="finalizarReserva(${r.id})" class="btn btn-action btn-outline-success flex-grow-1" title="Mover para Histórico">
+                        <i class="fas fa-check"></i> Finalizar
+                    </button>
+                    <button onclick="deletarReserva(${r.id})" class="btn btn-action btn-outline-danger" title="Excluir">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
             `;
         } else {
             botoesAcao = `
-                <div class="mt-3 border-top pt-2 text-end">
-                    <button onclick="deletarReserva(${r.id})" class="btn btn-sm btn-outline-danger">Remover do Histórico</button>
+                <div class="mt-3 text-end border-top pt-3">
+                    <small class="text-muted me-2">Histórico</small>
+                    <button onclick="deletarReserva(${r.id})" class="btn btn-action btn-sm btn-outline-danger">
+                        <i class="fas fa-trash"></i> Remover
+                    </button>
                 </div>
             `;
         }
 
         const html = `
-            <div class="col-md-6">
-                <div class="card p-3 h-100 status-${r.status_pagamento}">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 fw-bold">${r.nome_cliente}</h5>
-                        <span class="badge ${corBadge}">${statusTexto}</span>
+            <div class="col-md-6 col-lg-4">
+                <div class="card event-card h-100 position-relative ps-3">
+                    <div class="event-status-strip ${statusConfig.classe}"></div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="fw-bold mb-0 text-dark">${r.nome_cliente}</h5>
+                            <span class="badge rounded-pill ${statusConfig.badge} shadow-sm">
+                                <i class="fas ${statusConfig.icon} me-1"></i> ${statusConfig.texto}
+                            </span>
+                        </div>
+                        
+                        <h6 class="text-muted mb-3"><i class="far fa-calendar-alt me-2"></i>${dataF}</h6>
+                        
+                        <div class="p-2 bg-light rounded border mb-2 small text-secondary">
+                            <i class="fas fa-info-circle me-1"></i> ${r.detalhes_evento || 'Sem observações.'}
+                        </div>
+                        
+                        ${botoesAcao}
                     </div>
-                    <div class="mt-2">
-                        <strong>📅 ${dataF}</strong>
-                    </div>
-                    <p class="mb-0 mt-2 text-muted small border p-2 bg-light rounded">${r.detalhes_evento || 'Sem detalhes adicionais.'}</p>
-                    ${botoesAcao}
                 </div>
             </div>
         `;
