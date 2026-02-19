@@ -7,6 +7,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
+const bcrypt = require('bcrypt'); // <-- ADICIONADO PARA CRIPTOGRAFIA (Critério 3)
 
 const app = express();
 const PORT = 3000;
@@ -17,8 +18,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // APONTA PARA A PASTA CLIENT (IMPORTANTE)
-// --- CORREÇÃO PARA AS FOTOS ---
-
 // 1. Diz pro servidor: "Se alguém pedir '/uploads', procure na pasta '../client/uploads'"
 app.use('/uploads', express.static(path.join(__dirname, '../client/uploads')));
 
@@ -45,6 +44,11 @@ db.connect((err) => {
     if (err) console.error('❌ Erro ao conectar no Banco:', err);
     else console.log('✅ Banco de Dados Conectado (Porta 3305)!');
 });
+
+// --- SIMULAÇÃO DE BANCO DE DADOS PARA O ADMIN (Critério 3) ---
+// O bcrypt.hashSync gera a versão criptografada da senha "rauber123"
+const EMAIL_ADMIN_SALVO = 'admin@rauber.com';
+const HASH_SENHA_SALVA = bcrypt.hashSync('rauber123', 10);
 
 // ================= ROTAS DO SISTEMA =================
 
@@ -79,18 +83,17 @@ app.put('/api/reservas/:id', (req, res) => {
     const { id } = req.params;
     const { nome_cliente, data_evento, detalhes_evento, status_pagamento } = req.body;
     
-    // --- LÓGICA INTELIGENTE ---
-    // Se o site mandou APENAS "CONCLUIDO" (Botão Finalizar), atualizamos só os status
+    // Se o site mandou APENAS "CONCLUIDO" (Botão Finalizar)
     if (!nome_cliente && status_pagamento === 'CONCLUIDO') {
         const query = "UPDATE reservas SET status_pagamento='CONCLUIDO', status_agendamento='CONCLUIDO' WHERE id=?";
         db.query(query, [id], (err, result) => {
             if (err) return res.status(500).json(err);
             res.json({ message: 'Evento Finalizado com Sucesso!' });
         });
-        return; // Para o código aqui para não tentar fazer a atualização completa abaixo
+        return;
     }
 
-    // Se o site mandou TUDO (Botão Editar), fazemos a atualização completa
+    // Atualização completa
     let status_agendamento = 'ATIVO';
     if (status_pagamento === 'CONCLUIDO') status_agendamento = 'CONCLUIDO';
 
@@ -137,6 +140,25 @@ app.delete('/api/galeria/:id', (req, res) => {
         if (err) return res.status(500).json(err);
         res.json({ message: 'Foto removida' });
     });
+});
+
+// 9. Login do Admin (Critério 3: Segurança e Criptografia)
+app.post('/api/login', async (req, res) => {
+    const { email, senha } = req.body;
+
+    // Verifica email
+    if (email !== EMAIL_ADMIN_SALVO) {
+        return res.status(401).json({ error: 'Usuário ou senha incorretos!' });
+    }
+
+    // Verifica senha usando bcrypt
+    const senhaValida = await bcrypt.compare(senha, HASH_SENHA_SALVA);
+
+    if (senhaValida) {
+        res.json({ message: 'Login autorizado!' });
+    } else {
+        res.status(401).json({ error: 'Usuário ou senha incorretos!' });
+    }
 });
 
 // INICIAR SERVIDOR

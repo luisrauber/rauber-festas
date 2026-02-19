@@ -1,19 +1,33 @@
 const API_URL = 'http://localhost:3000/api';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Login
-    document.getElementById('form-login').addEventListener('submit', (e) => {
+    // --- LOGIN ATUALIZADO (Critério 3: Segurança com Backend) ---
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('email').value;
         const senha = document.getElementById('senha').value;
 
-        if(email === 'admin@rauber.com' && senha === 'rauber123') {
-            document.getElementById('tela-login').classList.add('d-none');
-            document.getElementById('tela-painel').classList.remove('d-none');
-            carregarReservas();
-            carregarFotos();
-        } else {
-            alert('Email ou senha incorretos!');
+        try {
+            // Envia os dados para a nova rota segura no servidor
+            const res = await fetch(`${API_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha })
+            });
+
+            if(res.ok) {
+                // Se o servidor autorizou o login
+                document.getElementById('tela-login').classList.add('d-none');
+                document.getElementById('tela-painel').classList.remove('d-none');
+                carregarReservas();
+                carregarFotos();
+            } else {
+                // Se o servidor negou (senha errada)
+                const errorData = await res.json();
+                alert(errorData.error || 'Email ou senha incorretos!');
+            }
+        } catch (erro) {
+            alert('Erro ao tentar conectar com o servidor.');
         }
     });
 
@@ -71,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (erro) { alert('Erro ao salvar.'); }
     });
 
-    // --- NOVO: INICIALIZAR CALENDÁRIO QUANDO O MODAL ABRIR ---
+    // INICIALIZAR CALENDÁRIO QUANDO O MODAL ABRIR
     const modalCalendario = document.getElementById('modalCalendarioAdmin');
     modalCalendario.addEventListener('shown.bs.modal', () => {
         renderizarCalendarioAdmin();
@@ -93,12 +107,12 @@ async function carregarReservas() {
         const dataObj = new Date(r.data_evento);
         const dataF = new Date(dataObj.getUTCFullYear(), dataObj.getUTCMonth(), dataObj.getUTCDate()).toLocaleDateString('pt-BR');
         
-        // --- CONFIGURAÇÃO DOS NOVOS ÍCONES MODERNOS ---
+        // CONFIGURAÇÃO DOS NOVOS ÍCONES MODERNOS
         let statusConfig = { 
             texto: 'Aguardando Pagamento', 
             classe: 'bg-status-NAO_PAGO', 
-            badge: 'bg-danger bg-opacity-75', // Vermelho mais suave
-            icon: 'fa-file-invoice-dollar'     // Ícone de Fatura
+            badge: 'bg-danger bg-opacity-75',
+            icon: 'fa-file-invoice-dollar' 
         };
         
         if(r.status_pagamento === 'PARCIAL') {
@@ -106,7 +120,7 @@ async function carregarReservas() {
                 texto: 'Sinal Pago', 
                 classe: 'bg-status-PARCIAL', 
                 badge: 'bg-warning text-dark',
-                icon: 'fa-handshake'           // Ícone de Acordo/Sinal
+                icon: 'fa-handshake' 
             };
         }
         
@@ -115,7 +129,7 @@ async function carregarReservas() {
                 texto: 'Quitado', 
                 classe: 'bg-status-PAGO', 
                 badge: 'bg-success',
-                icon: 'fa-check-double'        // Duplo Check (Confirmado)
+                icon: 'fa-check-double'
             };
         }
         
@@ -124,7 +138,7 @@ async function carregarReservas() {
                 texto: 'Arquivado', 
                 classe: 'bg-status-CONCLUIDO', 
                 badge: 'bg-secondary',
-                icon: 'fa-box-open'            // Ícone de Caixa/Arquivo
+                icon: 'fa-box-open'
             };
         }
 
@@ -186,7 +200,7 @@ async function carregarReservas() {
     });
 }
 
-// --- NOVO: RENDERIZAR CALENDÁRIO NO MODAL ---
+// RENDERIZAR CALENDÁRIO NO MODAL
 async function renderizarCalendarioAdmin() {
     const calendarEl = document.getElementById('calendarAdmin');
     
