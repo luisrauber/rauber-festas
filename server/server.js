@@ -68,17 +68,43 @@ app.get('/api/reservas/publicas', (req, res) => {
     });
 });
 
-// 3. Criar Reserva
+// 3. Criar Reserva (COM VALIDAÇÕES)
 app.post('/api/reservas', (req, res) => {
     const { nome_cliente, data_evento, detalhes_evento, status_pagamento } = req.body;
-    const query = "INSERT INTO reservas (nome_cliente, data_evento, detalhes_evento, status_pagamento, status_agendamento) VALUES (?, ?, ?, ?, 'ATIVO')";
-    db.query(query, [nome_cliente, data_evento, detalhes_evento, status_pagamento], (err, result) => {
+
+    // --- REGRAS DE NEGÓCIO ---
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); // Zera a hora para comparar apenas o dia
+    
+    // Converte a data_evento de forma segura para não dar erro de fuso horário
+    const [ano, mes, dia] = data_evento.split('-');
+    const dataSelecionada = new Date(ano, mes - 1, dia);
+
+    // Validação 1: Bloqueia datas passadas
+    if (dataSelecionada < hoje) {
+        return res.status(400).json({ error: 'Não é possível agendar eventos em datas passadas.' });
+    }
+
+    // Validação 2: Verifica se já existe uma reserva ATIVA para esse dia
+    const sqlVerifica = "SELECT id FROM reservas WHERE DATE(data_evento) = ? AND status_agendamento = 'ATIVO'";
+    db.query(sqlVerifica, [data_evento], (err, resultados) => {
         if (err) return res.status(500).json(err);
-        res.json({ message: 'Reserva criada!', id: result.insertId });
+        
+        if (resultados.length > 0) {
+            // Se achou uma reserva, bloqueia
+            return res.status(400).json({ error: 'Já existe um evento agendado para esta data!' });
+        }
+
+        // Se passou pelas validações, salva no banco
+        const query = "INSERT INTO reservas (nome_cliente, data_evento, detalhes_evento, status_pagamento, status_agendamento) VALUES (?, ?, ?, ?, 'ATIVO')";
+        db.query(query, [nome_cliente, data_evento, detalhes_evento, status_pagamento], (err, result) => {
+            if (err) return res.status(500).json(err);
+            res.json({ message: 'Reserva criada!', id: result.insertId });
+        });
     });
 });
 
-// 4. ATUALIZAR RESERVA (CORRIGIDA PARA FINALIZAR)
+// 4. ATUALIZAR RESERVA (COM VALIDAÇÕES)
 app.put('/api/reservas/:id', (req, res) => {
     const { id } = req.params;
     const { nome_cliente, data_evento, detalhes_evento, status_pagamento } = req.body;
@@ -93,14 +119,25 @@ app.put('/api/reservas/:id', (req, res) => {
         return;
     }
 
-    // Atualização completa
+    // --- REGRAS DE NEGÓCIO DA EDIÇÃO ---
     let status_agendamento = 'ATIVO';
     if (status_pagamento === 'CONCLUIDO') status_agendamento = 'CONCLUIDO';
 
-    const query = "UPDATE reservas SET nome_cliente=?, data_evento=?, detalhes_evento=?, status_pagamento=?, status_agendamento=? WHERE id=?";
-    db.query(query, [nome_cliente, data_evento, detalhes_evento, status_pagamento, status_agendamento, id], (err, result) => {
+    // Validação: Verifica se, ao editar, o usuário não jogou a festa num dia já ocupado
+    const sqlVerifica = "SELECT id FROM reservas WHERE DATE(data_evento) = ? AND status_agendamento = 'ATIVO' AND id != ?";
+    db.query(sqlVerifica, [data_evento, id], (err, resultados) => {
         if (err) return res.status(500).json(err);
-        res.json({ message: 'Atualizado' });
+        
+        if (resultados.length > 0) {
+            return res.status(400).json({ error: 'Já existe um evento agendado para a data selecionada!' });
+        }
+
+        // Se passou pela validação de choque de datas, atualiza
+        const query = "UPDATE reservas SET nome_cliente=?, data_evento=?, detalhes_evento=?, status_pagamento=?, status_agendamento=? WHERE id=?";
+        db.query(query, [nome_cliente, data_evento, detalhes_evento, status_pagamento, status_agendamento, id], (err, result) => {
+            if (err) return res.status(500).json(err);
+            res.json({ message: 'Atualizado' });
+        });
     });
 });
 
