@@ -38,6 +38,22 @@
         .fc-daygrid-day.fc-day-past { background-color: #f0f0f0; }
         .fc-bg-event { opacity: 0.6; }
         .fc-event-title { font-weight: bold; color: white; }
+
+        /* --- CORREÇÃO DE RESPONSIVIDADE (CRITÉRIO 4) --- */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.2rem !important; /* Reduz o título gigante no celular */
+            }
+            .lead {
+                font-size: 1rem !important; /* Ajusta o subtítulo */
+            }
+            .price-amount {
+                font-size: 2rem !important; /* Reduz o tamanho do preço no celular */
+            }
+            #calendar {
+                padding: 10px; /* Dá mais respiro pro calendário na tela pequena */
+            }
+        }
     </style>
 </head>
 <body>
@@ -260,12 +276,29 @@
     
     <script>
         AOS.init();
+        
+        // Efeito da Navbar ao rolar a página
         window.addEventListener('scroll', function() {
             if (window.scrollY > 50) {
                 document.querySelector('.navbar').classList.add('shadow-sm');
             } else {
                 document.querySelector('.navbar').classList.remove('shadow-sm');
             }
+        });
+
+        // --- CORREÇÃO DE RESPONSIVIDADE DO MENU (CRITÉRIO 4) ---
+        // Faz o menu fechar automaticamente ao clicar em um link no celular
+        const navLinks = document.querySelectorAll('.nav-link');
+        const menuToggle = document.getElementById('navbarNav');
+        
+        navLinks.forEach((l) => {
+            l.addEventListener('click', () => {
+                if (menuToggle.classList.contains('show')) {
+                    // Se o menu estiver aberto, usa a função nativa do Bootstrap para fechar
+                    const bsCollapse = new bootstrap.Collapse(menuToggle, { toggle: false });
+                    bsCollapse.hide();
+                }
+            });
         });
     </script>
 </body>

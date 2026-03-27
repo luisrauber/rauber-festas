@@ -8,10 +8,13 @@
     --text-dark: #333;
 }
 
-body {
+/* --- TRAVA DE RESPONSIVIDADE (Resolve o espaço branco na direita) --- */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
     font-family: 'Poppins', sans-serif;
     color: var(--text-dark);
-    overflow-x: hidden;
 }
 
 h1, h2, h3, h4, .navbar-brand {
@@ -285,13 +288,40 @@ h1, h2, h3, h4, .navbar-brand {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* 5. Ajuste para Mobile (Tamanho da fonte nos dias da semana) */
+/* --- CORREÇÃO GERAL DE RESPONSIVIDADE (CRITÉRIO 4) --- */
 @media (max-width: 768px) {
+    /* Textos do Banner */
+    .hero-title {
+        font-size: 2.2rem !important;
+    }
+    .hero-section p.lead {
+        font-size: 1rem;
+        padding: 0 15px;
+    }
+    
+    /* Títulos das Seções */
+    .section-title h2 {
+        font-size: 2rem;
+    }
+    .section-padding {
+        padding: 50px 0; /* Diminui o espaço em branco entre as seções */
+    }
+
+    /* Preços nos Cards */
+    .price-amount, .price-value {
+        font-size: 2rem !important;
+    }
+
+    /* Ajustes do Calendário */
     .fc .fc-toolbar-title {
         font-size: 1.2rem;
     }
     .fc .fc-button {
         font-size: 0.8rem;
         padding: 5px 10px;
+    }
+    .fc-toolbar {
+        flex-direction: column;
+        gap: 10px;
     }
 }

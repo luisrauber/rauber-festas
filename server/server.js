@@ -7,6 +7,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
+const bcrypt = require('bcrypt'); // <-- ADICIONADO PARA CRIPTOGRAFIA (Critério 3)
 
 const app = express();
 const PORT = 3000;
@@ -17,8 +18,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // APONTA PARA A PASTA CLIENT (IMPORTANTE)
-// --- CORREÇÃO PARA AS FOTOS ---
-
 // 1. Diz pro servidor: "Se alguém pedir '/uploads', procure na pasta '../client/uploads'"
 app.use('/uploads', express.static(path.join(__dirname, '../client/uploads')));
 
@@ -46,6 +45,11 @@ db.connect((err) => {
     else console.log('✅ Banco de Dados Conectado (Porta 3305)!');
 });
 
+// --- SIMULAÇÃO DE BANCO DE DADOS PARA O ADMIN (Critério 3) ---
+// O bcrypt.hashSync gera a versão criptografada da senha "rauber123"
+const EMAIL_ADMIN_SALVO = 'admin@rauber.com';
+const HASH_SENHA_SALVA = bcrypt.hashSync('rauber123', 10);
+
 // ================= ROTAS DO SISTEMA =================
 
 // 1. Listar todas as reservas (Painel Admin)
@@ -64,40 +68,76 @@ app.get('/api/reservas/publicas', (req, res) => {
     });
 });
 
-// 3. Criar Reserva
+// 3. Criar Reserva (COM VALIDAÇÕES)
 app.post('/api/reservas', (req, res) => {
     const { nome_cliente, data_evento, detalhes_evento, status_pagamento } = req.body;
-    const query = "INSERT INTO reservas (nome_cliente, data_evento, detalhes_evento, status_pagamento, status_agendamento) VALUES (?, ?, ?, ?, 'ATIVO')";
-    db.query(query, [nome_cliente, data_evento, detalhes_evento, status_pagamento], (err, result) => {
+
+    // --- REGRAS DE NEGÓCIO ---
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0); // Zera a hora para comparar apenas o dia
+    
+    // Converte a data_evento de forma segura para não dar erro de fuso horário
+    const [ano, mes, dia] = data_evento.split('-');
+    const dataSelecionada = new Date(ano, mes - 1, dia);
+
+    // Validação 1: Bloqueia datas passadas
+    if (dataSelecionada < hoje) {
+        return res.status(400).json({ error: 'Não é possível agendar eventos em datas passadas.' });
+    }
+
+    // Validação 2: Verifica se já existe uma reserva ATIVA para esse dia
+    const sqlVerifica = "SELECT id FROM reservas WHERE DATE(data_evento) = ? AND status_agendamento = 'ATIVO'";
+    db.query(sqlVerifica, [data_evento], (err, resultados) => {
         if (err) return res.status(500).json(err);
-        res.json({ message: 'Reserva criada!', id: result.insertId });
+        
+        if (resultados.length > 0) {
+            // Se achou uma reserva, bloqueia
+            return res.status(400).json({ error: 'Já existe um evento agendado para esta data!' });
+        }
+
+        // Se passou pelas validações, salva no banco
+        const query = "INSERT INTO reservas (nome_cliente, data_evento, detalhes_evento, status_pagamento, status_agendamento) VALUES (?, ?, ?, ?, 'ATIVO')";
+        db.query(query, [nome_cliente, data_evento, detalhes_evento, status_pagamento], (err, result) => {
+            if (err) return res.status(500).json(err);
+            res.json({ message: 'Reserva criada!', id: result.insertId });
+        });
     });
 });
 
-// 4. ATUALIZAR RESERVA (CORRIGIDA PARA FINALIZAR)
+// 4. ATUALIZAR RESERVA (COM VALIDAÇÕES)
 app.put('/api/reservas/:id', (req, res) => {
     const { id } = req.params;
     const { nome_cliente, data_evento, detalhes_evento, status_pagamento } = req.body;
     
-    // --- LÓGICA INTELIGENTE ---
-    // Se o site mandou APENAS "CONCLUIDO" (Botão Finalizar), atualizamos só os status
+    // Se o site mandou APENAS "CONCLUIDO" (Botão Finalizar)
     if (!nome_cliente && status_pagamento === 'CONCLUIDO') {
         const query = "UPDATE reservas SET status_pagamento='CONCLUIDO', status_agendamento='CONCLUIDO' WHERE id=?";
         db.query(query, [id], (err, result) => {
             if (err) return res.status(500).json(err);
             res.json({ message: 'Evento Finalizado com Sucesso!' });
         });
-        return; // Para o código aqui para não tentar fazer a atualização completa abaixo
+        return;
     }
 
-    // Se o site mandou TUDO (Botão Editar), fazemos a atualização completa
+    // --- REGRAS DE NEGÓCIO DA EDIÇÃO ---
     let status_agendamento = 'ATIVO';
     if (status_pagamento === 'CONCLUIDO') status_agendamento = 'CONCLUIDO';
 
-    const query = "UPDATE reservas SET nome_cliente=?, data_evento=?, detalhes_evento=?, status_pagamento=?, status_agendamento=? WHERE id=?";
-    db.query(query, [nome_cliente, data_evento, detalhes_evento, status_pagamento, status_agendamento, id], (err, result) => {
+    // Validação: Verifica se, ao editar, o usuário não jogou a festa num dia já ocupado
+    const sqlVerifica = "SELECT id FROM reservas WHERE DATE(data_evento) = ? AND status_agendamento = 'ATIVO' AND id != ?";
+    db.query(sqlVerifica, [data_evento, id], (err, resultados) => {
         if (err) return res.status(500).json(err);
-        res.json({ message: 'Atualizado' });
+        
+        if (resultados.length > 0) {
+            return res.status(400).json({ error: 'Já existe um evento agendado para a data selecionada!' });
+        }
+
+        // Se passou pela validação de choque de datas, atualiza
+        const query = "UPDATE reservas SET nome_cliente=?, data_evento=?, detalhes_evento=?, status_pagamento=?, status_agendamento=? WHERE id=?";
+        db.query(query, [nome_cliente, data_evento, detalhes_evento, status_pagamento, status_agendamento, id], (err, result) => {
+            if (err) return res.status(500).json(err);
+            res.json({ message: 'Atualizado' });
+        });
     });
 });
 
@@ -137,6 +177,25 @@ app.delete('/api/galeria/:id', (req, res) => {
         if (err) return res.status(500).json(err);
         res.json({ message: 'Foto removida' });
     });
+});
+
+// 9. Login do Admin (Critério 3: Segurança e Criptografia)
+app.post('/api/login', async (req, res) => {
+    const { email, senha } = req.body;
+
+    // Verifica email
+    if (email !== EMAIL_ADMIN_SALVO) {
+        return res.status(401).json({ error: 'Usuário ou senha incorretos!' });
+    }
+
+    // Verifica senha usando bcrypt
+    const senhaValida = await bcrypt.compare(senha, HASH_SENHA_SALVA);
+
+    if (senhaValida) {
+        res.json({ message: 'Login autorizado!' });
+    } else {
+        res.status(401).json({ error: 'Usuário ou senha incorretos!' });
+    }
 });
 
 // INICIAR SERVIDOR
